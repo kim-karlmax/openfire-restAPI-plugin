@@ -51,13 +51,13 @@ public class MsgArchiveController {
         "WHERE (toJID = ? AND fromJID = ?) OR (toJID = ? AND fromJID = ?) GROUP BY conversationID";
 
     /** The Constant DELETE_OFCONVERSATION_BY_CONV_ID. */
-    private static final String DELETE_OFCONVERSATION_BY_CONV_ID = "DELETE FROM ofConversation WHERE conversationID IN (%s)";
+    private static final String DELETE_OFCONVERSATION_BY_CONV_ID = "DELETE FROM ofConversation WHERE conversationID = ?";
 
     /** The Constant DELETE_OFCONPARTICIPANT_BY_CONV_ID. */
-    private static final String DELETE_OFCONPARTICIPANT_BY_CONV_ID = "DELETE FROM ofConParticipant WHERE conversationID IN (%s)";
+    private static final String DELETE_OFCONPARTICIPANT_BY_CONV_ID = "DELETE FROM ofConParticipant WHERE conversationID = ?";
 
     /** The Constant DELETE_OFMESSAGEARCHIVE_BY_CONV_ID. */
-    private static final String DELETE_OFMESSAGEARCHIVE_BY_CONV_ID = "DELETE FROM ofMessageArchive WHERE conversationID IN (%s)";
+    private static final String DELETE_OFMESSAGEARCHIVE_BY_CONV_ID = "DELETE FROM ofMessageArchive WHERE conversationID = ?";
 
 
 
@@ -221,26 +221,31 @@ public class MsgArchiveController {
 
     private void deleteConversationsByID(List<Integer> conversationIDs) {
         Connection con = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement pstmt1 = null;
+        PreparedStatement pstmt2 = null;
+        PreparedStatement pstmt3 = null;
 
         try {
             con = DbConnectionManager.getConnection();
+            pstmt1 = con.prepareStatement(DELETE_OFCONVERSATION_BY_CONV_ID);
+            pstmt2 = con.prepareStatement(DELETE_OFCONPARTICIPANT_BY_CONV_ID);
+            pstmt3 = con.prepareStatement(DELETE_OFMESSAGEARCHIVE_BY_CONV_ID);
 
-            String sql = makeArraySQLQuery(DELETE_OFCONVERSATION_BY_CONV_ID, conversationIDs);
-            pstmt = con.prepareStatement(sql);
-            pstmt.executeUpdate();
-
-            sql = makeArraySQLQuery(DELETE_OFCONPARTICIPANT_BY_CONV_ID, conversationIDs);
-            pstmt = con.prepareStatement(sql);
-            pstmt.executeUpdate();
-
-            sql = makeArraySQLQuery(DELETE_OFMESSAGEARCHIVE_BY_CONV_ID, conversationIDs);
-            pstmt = con.prepareStatement(sql);
-            pstmt.executeUpdate();
+            for (Integer id: conversationIDs) {
+                LOG.warn("Deleting conversation: " + id);
+                pstmt1.setInt(1, id);
+                pstmt1.execute();
+                pstmt2.setInt(1, id);
+                pstmt2.execute();
+                pstmt3.setInt(1, id);
+                pstmt3.execute();
+            }
         } catch (SQLException sqle) {
             LOG.error(sqle.getMessage(), sqle);
         } finally {
-            DbConnectionManager.closeConnection(null, pstmt, con);
+            DbConnectionManager.closeConnection(pstmt1, con);
+            DbConnectionManager.closeConnection(pstmt2, con);
+            DbConnectionManager.closeConnection(pstmt3, con);
         }
     }
 
