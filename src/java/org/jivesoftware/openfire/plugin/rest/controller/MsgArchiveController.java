@@ -226,7 +226,6 @@ public class MsgArchiveController {
         try {
             con = DbConnectionManager.getConnection();
 
-
             String sql = makeArraySQLQuery(DELETE_OFCONVERSATION_BY_CONV_ID, conversationIDs);
             pstmt = con.prepareStatement(sql);
             pstmt.executeUpdate();
