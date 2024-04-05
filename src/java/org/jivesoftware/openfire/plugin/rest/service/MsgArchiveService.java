@@ -91,7 +91,7 @@ public class MsgArchiveService {
         throws ServiceException
     {
         JID jid = new JID(jidStr);
-        int deleteCount = 0;
+        int deleteCount;
         try {
             deleteCount = archive.deleteChatArchiveSingleUser(jid);
         } catch (Exception e) {
@@ -137,7 +137,7 @@ public class MsgArchiveService {
         JID jid1 = new JID(jid1Str);
         JID jid2 = new JID(jid2Str);
         List<String> entrants = Arrays.asList(jid1Str, jid2Str);
-        int deleteCount = 0;
+        int deleteCount;
         try {
             deleteCount = archive.deleteChatArchiveBetweenTwoUsers(jid1, jid2);
         } catch (Exception e) {

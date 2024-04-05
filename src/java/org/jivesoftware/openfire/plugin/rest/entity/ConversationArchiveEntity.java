@@ -35,9 +35,6 @@ public class ConversationArchiveEntity {
     @XmlElement
     int count;
 
-    public ConversationArchiveEntity() {
-    }
-
     public ConversationArchiveEntity(List<String> entrants, int count) {
         this.entrants = entrants;
         this.count = count;

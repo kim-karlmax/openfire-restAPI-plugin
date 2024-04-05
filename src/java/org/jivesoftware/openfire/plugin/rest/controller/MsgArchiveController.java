@@ -16,16 +16,13 @@
 
 package org.jivesoftware.openfire.plugin.rest.controller;
 
-import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
 import org.jivesoftware.database.DbConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
-import sun.jvm.hotspot.utilities.IntArray;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,27 +49,6 @@ public class MsgArchiveController {
     /** The Constant CONVERSATION_IDS_TWO_USER. */
     private static final String CONVERSATION_IDS_TWO_USER = "SELECT conversationID FROM ofMessageArchive " +
         "WHERE (toJID = ? AND fromJID = ?) OR (toJID = ? AND fromJID = ?) GROUP BY conversationID";
-
-//    /** The Constant DELETE_OFCONVERSATION_BY_CONV_ID. */
-//    private static final String DELETE_OFCONVERSATION_BY_CONV_ID = "DELETE FROM ofConversation " +
-//        "WHERE conversationID = ?";
-//
-//    /** The Constant DELETE_OFCONPARTICIPANT_BY_CONV_ID. */
-//    private static final String DELETE_OFCONPARTICIPANT_BY_CONV_ID = "DELETE FROM ofConParticipant " +
-//        "WHERE conversationID = ?";
-//
-//    /** The Constant DELETE_OFMESSAGEARCHIVE_BY_CONV_ID. */
-//    private static final String DELETE_OFMESSAGEARCHIVE_BY_CONV_ID = "DELETE FROM ofMessageArchive " +
-//        "WHERE conversationID = ?";
-
-//    /** The Constant DELETE_OFCONVERSATION_BY_CONV_ID. */
-//    private static final String DELETE_OFCONVERSATION_BY_CONV_ID = "DELETE FROM ofConversation WHERE conversationID IN (?)";
-//
-//    /** The Constant DELETE_OFCONPARTICIPANT_BY_CONV_ID. */
-//    private static final String DELETE_OFCONPARTICIPANT_BY_CONV_ID = "DELETE FROM ofConParticipant WHERE conversationID IN (?)";
-//
-//    /** The Constant DELETE_OFMESSAGEARCHIVE_BY_CONV_ID. */
-//    private static final String DELETE_OFMESSAGEARCHIVE_BY_CONV_ID = "DELETE FROM ofMessageArchive WHERE conversationID IN (?)";
 
     /** The Constant DELETE_OFCONVERSATION_BY_CONV_ID. */
     private static final String DELETE_OFCONVERSATION_BY_CONV_ID = "DELETE FROM ofConversation WHERE conversationID IN (%s)";
@@ -135,7 +111,7 @@ public class MsgArchiveController {
      * @return The number of archived messages.
      */
     public int getChatArchiveCountSingleUser(JID jid) {
-        int count = 0;
+        int count;
         List<Integer> convIDs = getConversationIDsSingleUser(jid);
         count = convIDs.size();
         return count;
@@ -148,7 +124,7 @@ public class MsgArchiveController {
      * @return The number of deleted archived messages.
      */
     public int deleteChatArchiveSingleUser(JID jid) {
-        int count = 0;
+        int count;
         List<Integer> convIDs = getConversationIDsSingleUser(jid);
         count = convIDs.size();
         if (count > 0) {
@@ -169,7 +145,7 @@ public class MsgArchiveController {
      * @return the number of messages that archived between two users.
      */
     public int getChatArchiveBetweenTwoUsers(JID jid1, JID jid2) {
-        int count = 0;
+        int count;
         List<Integer> convIDs = getConversationIDsTwoUser(jid1, jid2);
         count = convIDs.size();
         return count;
@@ -183,7 +159,7 @@ public class MsgArchiveController {
      * @return The number of deleted archived messages between two users.
      */
     public int deleteChatArchiveBetweenTwoUsers(JID jid1, JID jid2) {
-        int count = 0;
+        int count;
         List<Integer> convIDs = getConversationIDsTwoUser(jid1, jid2);
         count = convIDs.size();
         if (count > 0) {
@@ -199,7 +175,7 @@ public class MsgArchiveController {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<Integer> ids = new ArrayList<Integer>(0);
+        List<Integer> ids = new ArrayList<>(0);
         try {
             con = DbConnectionManager.getConnection();
             pstmt = con.prepareStatement(CONVERSATION_IDS_SINGLE_USER);
@@ -222,7 +198,7 @@ public class MsgArchiveController {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<Integer> ids = new ArrayList<Integer>(0);
+        List<Integer> ids = new ArrayList<>(0);
         try {
             con = DbConnectionManager.getConnection();
             pstmt = con.prepareStatement(CONVERSATION_IDS_TWO_USER);
