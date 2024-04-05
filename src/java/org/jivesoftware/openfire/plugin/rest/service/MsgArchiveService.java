@@ -23,18 +23,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jivesoftware.openfire.plugin.rest.controller.MsgArchiveController;
+import org.jivesoftware.openfire.plugin.rest.entity.ConversationArchiveEntity;
 import org.jivesoftware.openfire.plugin.rest.entity.MsgArchiveEntity;
+import org.jivesoftware.openfire.plugin.rest.exceptions.ExceptionType;
 import org.jivesoftware.openfire.plugin.rest.exceptions.ServiceException;
 import org.xmpp.packet.JID;
 
 import javax.annotation.PostConstruct;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.List;
 
-@Path("restapi/v1/archive/messages/unread/{jid}")
+@Path("restapi/v1/archive/messages")
 @Tag(name = "Message Archive", description = "Server-sided storage of chat messages.")
 public class MsgArchiveService {
 
@@ -46,6 +48,7 @@ public class MsgArchiveService {
     }
 
     @GET
+    @Path("/unread/{jid}")
     @Operation( summary = "Unread message count",
         description = "Gets a count of messages that haven't been delivered to the user yet.",
         responses = {
@@ -58,5 +61,89 @@ public class MsgArchiveService {
         JID jid = new JID(jidStr);
         int msgCount = archive.getUnReadMessagesCount(jid);
         return new MsgArchiveEntity(jidStr, msgCount);
+    }
+
+    @GET
+    @Path("/user/{jid}")
+    @Operation( summary = "Get chat archive count for a single user",
+        description = "Get chat archive count for a single user.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "count of archived messages for a single user", content = @Content(schema = @Schema(implementation = MsgArchiveEntity.class)))
+        })
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public MsgArchiveEntity getChatArchiveCountSingleUser(@Parameter(description = "The (bare) JID of the user whose archived messages should be retrieved.", example = "john@example.org", required = true) @PathParam("jid") String jidStr)
+        throws ServiceException
+    {
+        JID jid = new JID(jidStr);
+        int msgCount = archive.getChatArchiveCountSingleUser(jid);
+        return new MsgArchiveEntity(jidStr, msgCount);
+    }
+
+    @DELETE
+    @Path("/user/{jid}")
+    @Operation( summary = "Delete a single user's chat archive",
+        description = "Delete a single user's chat archive.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Delete a single user's chat archive", content = @Content(schema = @Schema(implementation = MsgArchiveEntity.class)))
+        })
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public MsgArchiveEntity deleteChatArchiveSingleUser(@Parameter(description = "The (bare) JID of the user whose archived messages need to be cleared.", example = "john@example.org", required = true) @PathParam("jid") String jidStr)
+        throws ServiceException
+    {
+        JID jid = new JID(jidStr);
+        int deleteCount = 0;
+        try {
+            deleteCount = archive.deleteChatArchiveSingleUser(jid);
+        } catch (Exception e) {
+            throw new ServiceException("Could not delete the user archived messages", jid.toBareJID(),
+                ExceptionType.SHARED_GROUP_EXCEPTION, Response.Status.BAD_REQUEST, e);
+        }
+        return new MsgArchiveEntity(jidStr, deleteCount);
+    }
+
+    @GET
+    @Path("/chat/{jid1}/{jid2}")
+    @Operation( summary = "Get count of archived chats between two users",
+        description = "Get count of archived chats between two users.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "count of archived chats between two users", content = @Content(schema = @Schema(implementation = ConversationArchiveEntity.class)))
+        })
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public ConversationArchiveEntity getChatArchiveBetweenTwoUsers(
+        @Parameter(description = "The (bare) JIDs of the first of the two users whose archived messages you need to retrieve.", example = "John@example.org", required = true) @PathParam("jid1") String jid1Str,
+        @Parameter(description = "The (bare) JIDs of the second of the two users whose archived messages you need to retrieve.", example = "Oliver@example.org", required = true) @PathParam("jid2") String jid2Str)
+        throws ServiceException
+    {
+        JID jid1 = new JID(jid1Str);
+        JID jid2 = new JID(jid2Str);
+        List<String> entrants = Arrays.asList(jid1Str, jid2Str);
+        int msgCount = archive.getChatArchiveBetweenTwoUsers(jid1, jid2);
+        return new ConversationArchiveEntity(entrants, msgCount);
+    }
+
+    @DELETE
+    @Path("/chat/{jid1}/{jid2}")
+    @Operation( summary = "Delete archived chats between two users",
+        description = "Delete archived chats between two users.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Delete archived chats between two users", content = @Content(schema = @Schema(implementation = ConversationArchiveEntity.class)))
+        })
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public ConversationArchiveEntity deleteChatArchiveBetweenTwoUsers(
+        @Parameter(description = "The (bare) JIDs of the first of two users whose archived messages need to be cleared.", example = "John@example.org", required = true) @PathParam("jid1") String jid1Str,
+        @Parameter(description = "The (bare) JIDs of the second of two users whose archived messages need to be cleared.", example = "Oliver@example.org", required = true) @PathParam("jid2") String jid2Str)
+        throws ServiceException
+    {
+        JID jid1 = new JID(jid1Str);
+        JID jid2 = new JID(jid2Str);
+        List<String> entrants = Arrays.asList(jid1Str, jid2Str);
+        int deleteCount = 0;
+        try {
+            deleteCount = archive.deleteChatArchiveBetweenTwoUsers(jid1, jid2);
+        } catch (Exception e) {
+            throw new ServiceException("Could not delete the user archived messages", jid1.toBareJID(),
+                ExceptionType.SHARED_GROUP_EXCEPTION, Response.Status.BAD_REQUEST, e);
+        }
+        return new ConversationArchiveEntity(entrants, deleteCount);
     }
 }
