@@ -18,25 +18,34 @@ package org.jivesoftware.openfire.plugin.rest.entity;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
 
 /**
- * The Class MsgArchiveEntity.
+ * The Class ConversationArchiveEntity.
  */
 @XmlRootElement(name = "conversation")
 public class ConversationArchiveEntity {
 
-    @XmlElement
-    List<String> entrants;
+    /**
+     * users in conversation
+     */
+    @XmlElement(name = "jid1")
+    String jid1;
+
+    @XmlElement(name = "jid2")
+    String jid2;
 
     /**
-     * unread messages count
+     * conversation count between users
      */
-    @XmlElement
+    @XmlElement(name = "count")
     int count;
 
-    public ConversationArchiveEntity(List<String> entrants, int count) {
-        this.entrants = entrants;
+    public ConversationArchiveEntity() {
+    }
+
+    public ConversationArchiveEntity(String jid1, String jid2, int count) {
+        this.jid1 = jid1;
+        this.jid2 = jid2;
         this.count = count;
     }
 }

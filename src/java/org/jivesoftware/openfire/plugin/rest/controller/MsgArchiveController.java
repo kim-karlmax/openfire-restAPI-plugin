@@ -111,6 +111,7 @@ public class MsgArchiveController {
      * @return The number of archived messages.
      */
     public int getChatArchiveCountSingleUser(JID jid) {
+        LOG.debug("invoked getChatArchiveCountSingleUser:" + jid.toBareJID());
         int count;
         List<Integer> convIDs = getConversationIDsSingleUser(jid);
         count = convIDs.size();
@@ -124,6 +125,7 @@ public class MsgArchiveController {
      * @return The number of deleted archived messages.
      */
     public int deleteChatArchiveSingleUser(JID jid) {
+        LOG.debug("invoked deleteChatArchiveSingleUser:" + jid.toBareJID());
         int count;
         List<Integer> convIDs = getConversationIDsSingleUser(jid);
         count = convIDs.size();
@@ -145,6 +147,7 @@ public class MsgArchiveController {
      * @return the number of messages that archived between two users.
      */
     public int getChatArchiveBetweenTwoUsers(JID jid1, JID jid2) {
+        LOG.debug("invoked getChatArchiveBetweenTwoUsers:" + jid1.toBareJID() + "," + jid2.toBareJID());
         int count;
         List<Integer> convIDs = getConversationIDsTwoUser(jid1, jid2);
         count = convIDs.size();
@@ -159,6 +162,7 @@ public class MsgArchiveController {
      * @return The number of deleted archived messages between two users.
      */
     public int deleteChatArchiveBetweenTwoUsers(JID jid1, JID jid2) {
+        LOG.debug("invoked deleteChatArchiveBetweenTwoUsers:" + jid1.toBareJID() + "," + jid2.toBareJID());
         int count;
         List<Integer> convIDs = getConversationIDsTwoUser(jid1, jid2);
         count = convIDs.size();
@@ -172,6 +176,8 @@ public class MsgArchiveController {
     }
 
     private List<Integer> getConversationIDsSingleUser(JID jid1) {
+        LOG.debug("invoked getConversationIDsSingleUser:" + jid1.toBareJID());
+
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -195,6 +201,8 @@ public class MsgArchiveController {
     }
 
     private List<Integer> getConversationIDsTwoUser(JID jid1, JID jid2) {
+        LOG.debug("invoked getConversationIDsTwoUser:" + jid1.toBareJID() + "," + jid2.toBareJID());
+
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -220,6 +228,8 @@ public class MsgArchiveController {
     }
 
     private void deleteConversationsByID(List<Integer> conversationIDs) {
+        LOG.debug("invoked deleteConversationsByID:" + conversationIDs.toString());
+
         Connection con = null;
         PreparedStatement pstmt1 = null;
         PreparedStatement pstmt2 = null;
@@ -247,10 +257,5 @@ public class MsgArchiveController {
             DbConnectionManager.closeConnection(pstmt2, con);
             DbConnectionManager.closeConnection(pstmt3, con);
         }
-    }
-
-    private String makeArraySQLQuery(String baseQuery, List<Integer> conversationIDs) {
-        return String.format(baseQuery, conversationIDs.stream()
-            .map(String::valueOf).collect(Collectors.joining(", ")));
     }
 }
