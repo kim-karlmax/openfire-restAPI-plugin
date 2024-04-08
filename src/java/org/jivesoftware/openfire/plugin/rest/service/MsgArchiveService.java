@@ -33,8 +33,6 @@ import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.List;
 
 @Path("restapi/v1/archive")
 @Tag(name = "Message Archive", description = "Server-sided storage of chat messages.")
