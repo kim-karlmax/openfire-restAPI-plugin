@@ -1809,8 +1809,8 @@ Endpoint to close/kick sessions from a user
 
 # Archived Conversation related REST Endpoints
 
-## Retrieve a user's archived conversation count 
-Endpoint to get user's archived conversation count
+## Retrieve the number of a user's archived conversations 
+Endpoint to get the number of a user's archived conversations
 > **GET** /archive/user/{jid}
 
 **Payload:** none
@@ -1829,8 +1829,8 @@ Endpoint to get user's archived conversation count
 >
 >**GET** http://example.org:9090/plugins/restapi/v1/archive/user/jid@test.com
 
-## Delete a user's archived conversation
-Endpoint to delete user's archived conversation
+## Delete a user's archived conversations
+Endpoint to delete a user's archived conversations
 > **DELETE** /archive/user/{jid}
 
 **Payload:** none
@@ -1849,8 +1849,8 @@ Endpoint to delete user's archived conversation
 >
 >**DELETE** http://example.org:9090/plugins/restapi/v1/archive/user/jid@test.com
 
-## Retrieve archived conversation count between two users
-Endpoint to get archived conversation count between two users.
+## Retrieve number of archived conversation between two users
+Endpoint to get the number of archived conversation between two users.
 > **GET** /archive/conversation/{jid1}/{jid2}
 
 **Payload:** none
@@ -1870,8 +1870,8 @@ Endpoint to get archived conversation count between two users.
 >
 >**GET** http://example.org:9090/plugins/restapi/v1/archive/conversation/jid1@test.com/jid2@test.com
 
-## Delete archived conversation count between two users
-Endpoint to delete archived conversation count between two users.
+## Delete archived conversations between two users
+Endpoint to delete archived conversations between two users.
 > **DELETE** /archive/conversation/{jid1}/{jid2}
 
 **Payload:** none
@@ -2128,17 +2128,17 @@ If you want to create a resource with JSON data format, please add "**Content-Ty
 | affiliation | No       | Affiliation of the user |
 
 ### Archived Message
-| Parameter | Optional | Description                 |
-|-----------|----------|-----------------------------|
-| jid       | No       | The JID of the user         |
-| count     | No       | Count of archived messages  |
+| Parameter | Optional | Description                     |
+|-----------|----------|---------------------------------|
+| jid       | No       | The JID of the user             |
+| count     | No       | Number of archived conversation |
 
 ### Archived Conversation
-| Parameter | Optional | Description                    |
-|-----------|----------|--------------------------------|
-| jid1      | No       | The JID of the first user      |
-| jid2      | No       | The JID of the second user     |
-| count     | No       | Count of archived conversation |
+| Parameter | Optional | Description                      |
+|-----------|----------|----------------------------------|
+| jid1      | No       | The JID of the first user        |
+| jid2      | No       | The JID of the second user       |
+| count     | No       | Number of archived conversations |
 
 # (Deprecated) User Service Plugin Readme
 
