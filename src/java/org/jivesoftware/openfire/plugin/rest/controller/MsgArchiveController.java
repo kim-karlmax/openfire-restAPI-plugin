@@ -114,10 +114,7 @@ public class MsgArchiveController {
      */
     public int getChatArchiveCountSingleUser(JID jid) {
         LOG.debug("invoked getChatArchiveCountSingleUser:" + jid.toBareJID());
-        int count;
-        List<Integer> convIDs = getConversationIDsSingleUser(jid);
-        count = convIDs.size();
-        return count;
+        return getConversationIDsSingleUser(jid).size();
     }
 
     /**
@@ -150,10 +147,7 @@ public class MsgArchiveController {
      */
     public int getChatArchiveBetweenTwoUsers(JID jid1, JID jid2) {
         LOG.debug("invoked getChatArchiveBetweenTwoUsers:" + jid1.toBareJID() + "," + jid2.toBareJID());
-        int count;
-        List<Integer> convIDs = getConversationIDsTwoUser(jid1, jid2);
-        count = convIDs.size();
-        return count;
+        return getConversationIDsTwoUser(jid1, jid2).size();
     }
 
     /**
