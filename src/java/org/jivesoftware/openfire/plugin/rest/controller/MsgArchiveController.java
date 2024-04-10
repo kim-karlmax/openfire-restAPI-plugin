@@ -107,10 +107,10 @@ public class MsgArchiveController {
     }
 
     /**
-     * Get the number of messages that archived to the user.
+     * Get the number of conversations that archived to the user.
      *
      * @param jid the jid
-     * @return The number of archived messages.
+     * @return The number of conversations.
      */
     public int getChatArchiveCountSingleUser(JID jid) {
         LOG.debug("invoked getChatArchiveCountSingleUser:" + jid.toBareJID());
@@ -118,10 +118,10 @@ public class MsgArchiveController {
     }
 
     /**
-     * Delete the all messages that archived to the user.
+     * Delete the all conversations that archived to the user.
      *
      * @param jid the jid
-     * @return The number of deleted archived messages.
+     * @return The number of deleted conversations.
      */
     public int deleteChatArchiveSingleUser(JID jid) {
         LOG.debug("invoked deleteChatArchiveSingleUser:" + jid.toBareJID());
@@ -139,11 +139,11 @@ public class MsgArchiveController {
 
 
     /**
-     * Get the number of messages that archived between two users.
+     * Get the number of conversations that archived between two users.
      *
      * @param jid1 the jid of first user
      * @param jid2 the jid of second user
-     * @return the number of messages that archived between two users.
+     * @return the number of conversations that archived between two users.
      */
     public int getChatArchiveBetweenTwoUsers(JID jid1, JID jid2) {
         LOG.debug("invoked getChatArchiveBetweenTwoUsers:" + jid1.toBareJID() + "," + jid2.toBareJID());
@@ -151,11 +151,11 @@ public class MsgArchiveController {
     }
 
     /**
-     * Delete the all messages that archived between two users.
+     * Delete the all conversations that archived between two users.
      *
      * @param jid1 the jid of first user
      * @param jid2 the jid of second user
-     * @return The number of deleted archived messages between two users.
+     * @return The number of deleted archived conversations between two users.
      */
     public int deleteChatArchiveBetweenTwoUsers(JID jid1, JID jid2) {
         LOG.debug("invoked deleteChatArchiveBetweenTwoUsers:" + jid1.toBareJID() + "," + jid2.toBareJID());
@@ -171,6 +171,12 @@ public class MsgArchiveController {
         return count;
     }
 
+    /**
+     * Gets a list of conversation IDs for one user among the conversations archived in the database.
+     *
+     * @param jid1 the jid of a user
+     * @return The list of conversation IDs
+     */
     private List<Integer> getConversationIDsSingleUser(JID jid1) {
         LOG.debug("invoked getConversationIDsSingleUser:" + jid1.toBareJID());
 
@@ -196,6 +202,13 @@ public class MsgArchiveController {
         return ids;
     }
 
+    /**
+     * Gets a list of conversation IDs between two users among the conversations archived in the database.
+     *
+     * @param jid1 the jid of first user
+     * @param jid2 the jid of second user
+     * @return The list of conversation IDs
+     */
     private List<Integer> getConversationIDsTwoUser(JID jid1, JID jid2) {
         LOG.debug("invoked getConversationIDsTwoUser:" + jid1.toBareJID() + "," + jid2.toBareJID());
 
@@ -223,6 +236,12 @@ public class MsgArchiveController {
         return ids;
     }
 
+    /**
+     * Delete archived conversations by conversation ID in the database.
+     * Deletes archived conversations from the ofConversation, ofConParticipant, and ofMessageArchive tables in the database.
+     *
+     * @param conversationIDs the list of conversation IDs
+     */
     private void deleteConversationsByID(List<Integer> conversationIDs) {
         LOG.debug("invoked deleteConversationsByID:" + conversationIDs.toString());
 
