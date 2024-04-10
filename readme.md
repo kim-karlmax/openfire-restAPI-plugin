@@ -25,6 +25,10 @@ Issues may be reported to the [forums](https://discourse.igniterealtime.org) or 
 * Get chat message history from a multi user chat room
 * Get clustering status of Openfire
 * Get overview of 'readiness' and 'liveness' state of Openfire
+* Get a user's number of archived conversations
+* Delete a user's archived conversations
+* Get the number of archived conversations between two users.
+* Delete archived conversations between two users.
 
 ## Available REST API clients
 REST API clients are implementations of the REST API in a specific programming language.
@@ -1803,7 +1807,90 @@ Endpoint to close/kick sessions from a user
 >
 >**DELETE** http://example.org:9090/plugins/restapi/v1/sessions/testuser
 
-# Message related REST Endpoints
+# Archived Conversation related REST Endpoints
+
+## Retrieve a user's archived conversation count 
+Endpoint to get user's archived conversation count
+> **GET** /archive/user/{jid}
+
+**Payload:** none
+
+**Return value:** Archived Message
+
+### Possible parameters
+
+| Parameter | Parameter Type | Description | Default value |
+|-----------|----------------|-------------|---------------|
+| jid	      | 	@Path         | 	Exact jid	 |               |
+
+### Examples
+
+>**Header:** Authorization: Basic YWRtaW46MTIzNDU=
+>
+>**GET** http://example.org:9090/plugins/restapi/v1/archive/user/jid@test.com
+
+## Delete a user's archived conversation
+Endpoint to delete user's archived conversation
+> **DELETE** /archive/user/{jid}
+
+**Payload:** none
+
+**Return value:** Archived Message
+
+### Possible parameters
+
+| Parameter | Parameter Type | Description | Default value |
+|-----------|----------------|-------------|---------------|
+| jid	      | 	@Path         | 	Exact jid	 |               |
+
+### Examples
+
+>**Header:** Authorization: Basic YWRtaW46MTIzNDU=
+>
+>**DELETE** http://example.org:9090/plugins/restapi/v1/archive/user/jid@test.com
+
+## Retrieve archived conversation count between two users
+Endpoint to get archived conversation count between two users.
+> **GET** /archive/conversation/{jid1}/{jid2}
+
+**Payload:** none
+
+**Return value:** Archived Conversation
+
+### Possible parameters
+
+| Parameter | Parameter Type | Description               | Default value |
+|-----------|----------------|---------------------------|---------------|
+| jid1	     | 	@Path         | Exact jid of first user	  |               |
+| jid2	     | 	@Path         | Exact jid of second user	 |               |
+
+### Examples
+
+>**Header:** Authorization: Basic YWRtaW46MTIzNDU=
+>
+>**GET** http://example.org:9090/plugins/restapi/v1/archive/conversation/jid1@test.com/jid2@test.com
+
+## Delete archived conversation count between two users
+Endpoint to delete archived conversation count between two users.
+> **DELETE** /archive/conversation/{jid1}/{jid2}
+
+**Payload:** none
+
+**Return value:** Archived Conversation
+
+### Possible parameters
+
+| Parameter | Parameter Type | Description               | Default value |
+|-----------|----------------|---------------------------|---------------|
+| jid1	     | 	@Path         | Exact jid of first user	  |               |
+| jid2	     | 	@Path         | Exact jid of second user	 |               |
+
+### Examples
+
+>**Header:** Authorization: Basic YWRtaW46MTIzNDU=
+>
+>**DELETE** http://example.org:9090/plugins/restapi/v1/archive/conversation/jid1@test.com/jid2@test.com
+
 
 ## Send a broadcast message
 Endpoint to send a broadcast/server message to all online users
@@ -1851,6 +1938,9 @@ Endpoint to get security audit logs
 >**Header**: Authorization: Basic YWRtaW46MTIzNDU=
 > 
 >**GET** http://example.org:9090/plugins/restapi/v1/logs/security
+
+# Archived conversation related REST Endpoints
+
 
 # Clustering related REST Endpoints
 
@@ -2036,6 +2126,19 @@ If you want to create a resource with JSON data format, please add "**Content-Ty
 | userAddress | No       | The JID of the user     |
 | role        | No       | Role of the user        |
 | affiliation | No       | Affiliation of the user |
+
+### Archived Message
+| Parameter | Optional | Description                 |
+|-----------|----------|-----------------------------|
+| jid       | No       | The JID of the user         |
+| count     | No       | Count of archived messages  |
+
+### Archived Conversation
+| Parameter | Optional | Description                    |
+|-----------|----------|--------------------------------|
+| jid1      | No       | The JID of the first user      |
+| jid2      | No       | The JID of the second user     |
+| count     | No       | Count of archived conversation |
 
 # (Deprecated) User Service Plugin Readme
 
